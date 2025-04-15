@@ -114,7 +114,7 @@ function typeLine() {
       if (line.includes('Press any key')) {
         paused = true;
         document.addEventListener('keydown', resumeBoot);
-        document.addEventListener('touchstart', resumeBoot);
+        document.addEventListener('touchstart', resumeBoot, { passive: false });
       } else {
         setTimeout(typeLine, 200 + Math.random() * 300);
       }
@@ -123,22 +123,26 @@ function typeLine() {
   typeChar();
 }
 
-function resumeBoot() {
+function resumeBoot(e) {
   if (!paused) return;
   paused = false;
+
   document.removeEventListener('keydown', resumeBoot);
   document.removeEventListener('touchstart', resumeBoot);
+
+  inputLine.style.display = 'block';
+  userInput.focus();
+
   output.appendChild(document.createElement('br'));
   output.appendChild(document.createTextNode('Continuing...'));
   output.appendChild(document.createElement('br'));
   ghost.textContent = output.textContent;
+
   setTimeout(() => {
     output.appendChild(document.createElement('br'));
     output.appendChild(document.createTextNode('System ready. Type your message below:'));
     output.appendChild(document.createElement('br'));
     ghost.textContent = output.textContent;
-    inputLine.style.display = 'block';
-    userInput.focus();
   }, 1000);
 }
 
