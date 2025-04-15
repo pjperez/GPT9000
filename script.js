@@ -65,24 +65,16 @@ const commands = {
   help: () => `Available commands:
   help  logout  clear  version  model  fortune  motd
   system info  beep  ascii <text>
-  pwd  ls  cd <dir>  cat <file>` ,
+  pwd  ls  cd <dir>  cat <file>`,
   logout: () => { localStorage.removeItem('openai_api_key'); location.reload(); return 'Logging out...'; },
   clear: () => { output.innerHTML = ''; ghost.innerHTML = ''; return ''; },
   version: () => 'GPT-9000 v1.0 (model: gpt-4)',
   model: () => 'Currently using OpenAI GPT-4',
   fortune: () => ['You will debug something today.', 'Beware off-by-one errors.', '42 is the answer.'][Math.floor(Math.random()*3)],
   motd: () => 'Welcome to the GPT-9000 terminal. Keep it weird.',
-  'system info': () => `GPT-OS v0.9
-RAM: 128MB
-Entropy pool: unstable
-Uptime: ${Math.floor(performance.now()/1000)}s`,
+  'system info': () => `GPT-OS v0.9\nRAM: 128MB\nEntropy pool: unstable\nUptime: ${Math.floor(performance.now()/1000)}s`,
   beep: () => { new AudioContext().createOscillator().connect(new AudioContext().destination).start().stop(); return '[beep]'; },
-  ascii: (args) => ` ____  ____
-|  _ \\|  _ \\
-| | | | | | |
-| |_| | |_| |
-|____/|____/
-${args}`
+  ascii: (args) => ` ____  ____\n|  _ \\|  _ \\\n| | | | | | |\n| |_| | |_| |\n|____/|____/\n${args}`
 };
 
 const bootLines = [
@@ -122,6 +114,7 @@ function typeLine() {
       if (line.includes('Press any key')) {
         paused = true;
         document.addEventListener('keydown', resumeBoot);
+        document.addEventListener('touchstart', resumeBoot);
       } else {
         setTimeout(typeLine, 200 + Math.random() * 300);
       }
@@ -134,6 +127,7 @@ function resumeBoot() {
   if (!paused) return;
   paused = false;
   document.removeEventListener('keydown', resumeBoot);
+  document.removeEventListener('touchstart', resumeBoot);
   output.appendChild(document.createElement('br'));
   output.appendChild(document.createTextNode('Continuing...'));
   output.appendChild(document.createElement('br'));
@@ -144,6 +138,7 @@ function resumeBoot() {
     output.appendChild(document.createElement('br'));
     ghost.textContent = output.textContent;
     inputLine.style.display = 'block';
+    userInput.focus();
   }, 1000);
 }
 
