@@ -112,7 +112,7 @@ function typeLine() {
       lineIndex++;
       charIndex = 0;
       if (line.includes('Press any key')) {
-        waitForUserToContinue(); // Use timeout-aware version
+        waitForUserToContinue();
       } else {
         setTimeout(typeLine, 200 + Math.random() * 300);
       }
@@ -123,36 +123,26 @@ function typeLine() {
 
 function waitForUserToContinue() {
   paused = true;
-
   let resumed = false;
   const proceed = () => {
     if (resumed) return;
     resumed = true;
     resumeBoot();
   };
-
   document.addEventListener('keydown', proceed);
   document.addEventListener('touchstart', proceed, { passive: false });
-
-  // Auto-continue after 3 seconds if no user input
-  setTimeout(proceed, 3000);
+  setTimeout(proceed, 3000); // fallback after 3s
 }
 
 function resumeBoot() {
   if (!paused) return;
   paused = false;
-
-  document.removeEventListener('keydown', resumeBoot);
-  document.removeEventListener('touchstart', resumeBoot);
-
   inputLine.style.display = 'block';
   userInput.focus();
-
   output.appendChild(document.createElement('br'));
   output.appendChild(document.createTextNode('Continuing...'));
   output.appendChild(document.createElement('br'));
   ghost.textContent = output.textContent;
-
   setTimeout(() => {
     output.appendChild(document.createElement('br'));
     output.appendChild(document.createTextNode('System ready. Type your message below:'));
@@ -224,6 +214,19 @@ userInput.addEventListener('keydown', async function(e) {
       });
 
       const data = await res.json();
+
+      if (data.error) {
+        const errLine = document.createElement('div');
+        errLine.textContent = `[Error] ${data.error.message || JSON.stringify(data.error)}`;
+        output.appendChild(errLine);
+      }
+
+      if (!data.choices || !data.choices[0]) {
+        const emptyReply = document.createElement('div');
+        emptyReply.textContent = '[OpenAI returned no choices]';
+        output.appendChild(emptyReply);
+      }
+
       const reply = data.choices?.[0]?.message?.content || '[no reply]';
       botMsg.textContent = reply;
     } catch (err) {
