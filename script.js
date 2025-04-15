@@ -214,19 +214,7 @@ userInput.addEventListener('keydown', async function(e) {
       });
 
       const data = await res.json();
-
-      if (data.error) {
-        const errLine = document.createElement('div');
-        errLine.textContent = `[Error] ${data.error.message || JSON.stringify(data.error)}`;
-        output.appendChild(errLine);
-      }
-
-      if (!data.choices || !data.choices[0]) {
-        const emptyReply = document.createElement('div');
-        emptyReply.textContent = '[OpenAI returned no choices]';
-        output.appendChild(emptyReply);
-      }
-
+      
       const reply = data.choices?.[0]?.message?.content || '[no reply]';
       botMsg.textContent = reply;
     } catch (err) {
