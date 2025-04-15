@@ -112,9 +112,7 @@ function typeLine() {
       lineIndex++;
       charIndex = 0;
       if (line.includes('Press any key')) {
-        paused = true;
-        document.addEventListener('keydown', resumeBoot);
-        document.addEventListener('touchstart', resumeBoot, { passive: false });
+        waitForUserToContinue(); // Use timeout-aware version
       } else {
         setTimeout(typeLine, 200 + Math.random() * 300);
       }
@@ -123,7 +121,24 @@ function typeLine() {
   typeChar();
 }
 
-function resumeBoot(e) {
+function waitForUserToContinue() {
+  paused = true;
+
+  let resumed = false;
+  const proceed = () => {
+    if (resumed) return;
+    resumed = true;
+    resumeBoot();
+  };
+
+  document.addEventListener('keydown', proceed);
+  document.addEventListener('touchstart', proceed, { passive: false });
+
+  // Auto-continue after 3 seconds if no user input
+  setTimeout(proceed, 3000);
+}
+
+function resumeBoot() {
   if (!paused) return;
   paused = false;
 
