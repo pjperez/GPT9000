@@ -1,0 +1,72 @@
+body {
+  margin: 0;
+  background: black;
+  color: #00FF00;
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  line-height: 1.4;
+  overflow: hidden;
+}
+.terminal {
+  height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+  white-space: pre-wrap;
+  overflow-y: auto;
+  position: relative;
+  animation: flicker 1s infinite alternate;
+}
+.terminal span {
+  text-shadow: 0 0 3px #00FF00, 0 0 6px #00CC00, 1px 0 10px rgba(0, 255, 0, 0.3);
+}
+.cursor {
+  display: inline-block;
+  width: 12px;
+  height: 20px;
+  background-color: #00FF00;
+  animation: blink 1s steps(1) infinite;
+  vertical-align: bottom;
+  margin-left: 2px;
+}
+@keyframes blink {
+  50% { opacity: 0; }
+}
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.97; }
+  70% { opacity: 0.99; }
+  90% { opacity: 0.95; }
+}
+.scanlines::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 255, 0, 0.03),
+    rgba(0, 255, 0, 0.03) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  pointer-events: none;
+}
+.ghost {
+  position: absolute;
+  color: rgba(0, 255, 0, 0.12);
+  top: 0;
+  left: 0;
+  white-space: pre-wrap;
+  pointer-events: none;
+}
+input {
+  background: transparent;
+  border: none;
+  color: #00FF00;
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  outline: none;
+  width: 90%;
+}
