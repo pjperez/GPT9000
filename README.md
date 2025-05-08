@@ -2,6 +2,8 @@
 
 A retro-style ChatGPT terminal UI you can run in any browser. Looks and feels like an old-school green CRT.
 
+![Screenshot](https://raw.githubusercontent.com/pjperez/GPT9000/refs/heads/main/screenshot.png)
+
 ## How to Use
 
 1. Open `index.html` in your browser.
